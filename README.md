@@ -109,7 +109,8 @@ basePackage:指定sql映射文件/接口所在的包（自动扫描）
 ```
 com.test.spring.*表示com.test.spring下面所有的包，自动递归下去。  
 但是mybatis的不是这样的，不会递归，我也是醉了一地的。  
-我的xxmapper.xml在com.test.spring.xx.dao下面，xx表示各种文件夹，我的dao层是放在不同的实体下面的，userDao放在com.test.spring.user.dao下面，roleDao放在com.teset.spring.role.dao下面，所以刚开始配置的时候我是这样写的  
+我的xxmapper.java接口在com.test.spring.xx.dao下面，xx表示各种文件夹，我的dao层是放在不同的实体下面的，userDao放在com.test.spring.user.dao下面，roleDao放在com.teset.spring.role
+.dao下面，所以刚开始配置的时候我是这样写的
 ```
 <property name="basePackage" value="com.test.spring.*" />
 ```
@@ -124,4 +125,4 @@ http://localhost:8082/myBatis-spring/user/find
 * mybatis自动化
 * 日志集成logback
 * docker化
-* ...
+* 数据源使用阿里的build
