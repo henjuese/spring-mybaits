@@ -1,5 +1,5 @@
 # spring-mybatis
-spring4.1.0+mybatis3.1+springmvc4.1.0配置
+spring4+mybatis3+springmvc4配置
 
 ## spring 与spring mvc配置
 看web.xml里面的说明即可，这里就不多说了
@@ -11,23 +11,23 @@ spring4.1.0+mybatis3.1+springmvc4.1.0配置
 
 #### SqlSessionFactoryBuilder
 这个类可以被实例化，使用和丢弃。一旦你创建了 SqlSessionFactory 后，这个类就不需 要存在了。  
-**==只需要创建一次，然后就可以丢去了==**
+**只需要创建一次，然后就可以丢去了**
 
 #### SqlSessionFactory
-一旦被创建，SqlSessionFactory 应该在你的应用执行期间都存在。没有理由来处理或重 新创建它。  
-**==仅仅只能需要创建一次，不能创建多个SqlSessionFactory==**
+一旦被创建，SqlSessionFactory 应该在你的应用执行期间都存在。没有理由来处理或重 新创建它。
+**仅仅只能需要创建一次，不能创建多个SqlSessionFactory**
 
 #### SqlSession
-==每个线程都应该有它自己的 SqlSession 实例==。SqlSession 的实例不能被共享，也是线程 不安全的。因此最佳的范围是请求或方法范围
-==关闭 Session 很重要，你应该确保使 用 finally 块来关闭它==
+**每个线程都应该有它自己的 SqlSession 实例**。SqlSession 的实例不能被共享，也是线程 不安全的。因此最佳的范围是请求或方法范围
+**关闭 Session 很重要，你应该确保使 用 finally 块来关闭它**
 ```
 String resource = "org/mybatis/example/Configuration.xml";
 Reader reader = Resources.getResourceAsReader(resource);
 SqlSessionFactory sqlSessionFactory  = new SqlSessionFactoryBuilder().build(reader);
 SqlSession session = sqlSessionFactory.openSession(); 
 try {
-BlogMapper mapper = session.getMapper(BlogMapper.class);
-Blog blog = mapper.selectBlog(101);
+    BlogMapper mapper = session.getMapper(BlogMapper.class);
+    Blog blog = mapper.selectBlog(101);
 } finally {
   session.close(); 
 }
@@ -40,26 +40,25 @@ Blog blog = mapper.selectBlog(101);
 ### 第一步配置数据库源
 ```
 <!-- 1. 数据源 : DriverManagerDataSource -->
-	<bean id="dataSource"
-		class="org.springframework.jdbc.datasource.DriverManagerDataSource">
-		<property name="driverClassName" value="com.mysql.jdbc.Driver" />
-		<property name="url" value="jdbc:mysql://localhost:3306/mybatis" />
-		<property name="username" value="root" />
-		<property name="password" value="root" />
-	</bean>
+<bean id="dataSource"
+    class="org.springframework.jdbc.datasource.DriverManagerDataSource">
+    <property name="driverClassName" value="com.mysql.jdbc.Driver" />
+    <property name="url" value="jdbc:mysql://localhost:3306/mybatis" />
+    <property name="username" value="root" />
+    <property name="password" value="root" />
+</bean>
 ```  
 ### 第二步定义连接工厂
 ```
 <!--
-		2. mybatis的SqlSession的工厂: SqlSessionFactoryBean dataSource:引用数据源
-
-		MyBatis定义数据源,同意加载配置
-	-->
-	<bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
-		<property name="dataSource" ref="dataSource"></property>
-		<property name="configLocation" value="classpath:mybatis-config.xml" />
-		<property name="mapperLocations" value="classpath*:com/test/spring/**/*Mapper.xml"/>
-	</bean>
+2. mybatis的SqlSession的工厂: SqlSessionFactoryBean dataSource:引用数据源
+MyBatis定义数据源,同意加载配置
+-->
+<bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+    <property name="dataSource" ref="dataSource"></property>
+    <property name="configLocation" value="classpath:mybatis-config.xml" />
+    <property name="mapperLocations" value="classpath*:com/test/spring/**/*Mapper.xml"/>
+</bean>
 ```
 这里就需要多说几句了，坑爹的东西在这里。  
 mybatis-config.xml这个文件我是放在资源文件夹下，所以加载方式如下  
@@ -75,15 +74,14 @@ mybatis-config.xml这个文件我是放在资源文件夹下，所以加载方�
 ### 创建sqlSession
 ```
 <!--
-		3. mybatis自动扫描加载Sql映射文件/接口 : MapperScannerConfigurer sqlSessionFactory
-
-		basePackage:指定sql映射文件/接口所在的包（自动扫描）
-	-->
-	<bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
-		<!-- 扫描com.test.spring这个包以及它的子包下的所有映射接口类 -->
-		<property name="basePackage" value="com.test.spring.*.dao" />
-		<property name="sqlSessionFactoryBeanName" value="sqlSessionFactory" />
-	</bean>
+3. mybatis自动扫描加载Sql映射文件/接口 : MapperScannerConfigurer sqlSessionFactory
+basePackage:指定sql映射文件/接口所在的包（自动扫描）
+-->
+<bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+    <!-- 扫描com.test.spring这个包以及它的子包下的所有映射接口类 -->
+    <property name="basePackage" value="com.test.spring.*.dao" />
+    <property name="sqlSessionFactoryBeanName" value="sqlSessionFactory" />
+</bean>
 ``` 
 >没有必要在 Spring 的 XML 配置文件中注册所有的映射器。相反,你可以使用一个 MapperScannerConfigurer , 它 将 会 查 找 类 路 径 下 的 映 射 器 并 自 动 将 它 们 创 建 成 MapperFactoryBean。
 >要创建 MapperScannerConfigurer,可以在 Spring 的配置中添加如下代码:
@@ -107,7 +105,7 @@ mybatis-config.xml这个文件我是放在资源文件夹下，所以加载方�
 大家应该记得springmvc配置注解扫描包
 ```
 <!-- 注解扫描包 -->
-	<context:component-scan base-package="com.test.spring.*" />
+<context:component-scan base-package="com.test.spring.*" />
 ```
 com.test.spring.*表示com.test.spring下面所有的包，自动递归下去。  
 但是mybatis的不是这样的，不会递归，我也是醉了一地的。  
@@ -120,3 +118,10 @@ com.test.spring.*表示com.test.spring下面所有的包，自动递归下去。
 
 ## 运行起来吧！
 http://localhost:8082/myBatis-spring/user/find
+
+## 后续
+还有很多值得研究的
+* mybatis自动化
+* 日志集成logback
+* docker化
+* ...
