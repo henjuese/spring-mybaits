@@ -116,3 +116,7 @@ com.test.spring.*表示com.test.spring下面所有的包，自动递归下去。
 <property name="basePackage" value="com.test.spring.*" />
 ```
 结果运行起来死活包错，找不到映射文件，害我折腾了一天。  
+
+
+## 运行起来吧！
+http://localhost:8082/myBatis-spring/user/find
